@@ -137,7 +137,9 @@
     padding: 3px 3px 2px; text-align: center; border-bottom: 1.5px solid rgba(0,0,0,0.15);
   }
   .neighbor-name { font-size: 9.5px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
-  .neighbor-name.locked { color: #90caf9; font-style: italic; }
+  .neighbor-name.locked { color: #8899aa; font-style: italic; }
+  .neighbor-name.active { color: #69f0ae; }
+  .neighbor-name.has-task { color: #ffab40; }
 
   .card-body {
     width: 100%; background: linear-gradient(180deg, #f5e6c8, #e8d5b0);
@@ -642,11 +644,11 @@ const AVATARS = {
 const neighbors = [
   // ── Row 1: Unlocked ──
   { id:'marta', name:'Marta', fullName:'Marta the Baker', rarity:'common', unlocked:true, rewardReady:true, give:'reward',
-    reward:{type:'gold',label:'🪙 10 gold',badge:'gold',badgeIcon:'🪙',cls:'gold-text'},
+    reward:{type:'gold',label:'🪙 3 gold',badge:'gold',badgeIcon:'🪙',cls:'gold-text'},
     quote:'"The secret ingredient is always love... and butter."',
     boost:null, unlock:null },
   { id:'felix', name:'Felix', fullName:'Felix the Handyman', rarity:'common', unlocked:true, rewardReady:true, give:'reward',
-    reward:{type:'energy',label:'⚡ 8 energy',badge:'energy',badgeIcon:'⚡',cls:'energy-text'},
+    reward:{type:'energy',label:'⚡ 3 energy',badge:'energy',badgeIcon:'⚡',cls:'energy-text'},
     quote:'"If it ain\'t broke, I\'ll find something that is."',
     boost:null, unlock:null },
   { id:'otto', name:'Prof. Otto', fullName:'Professor Otto', rarity:'rare', unlocked:true, rewardReady:false, give:'boost',
@@ -663,14 +665,14 @@ const neighbors = [
     reward:null,
     quote:'"I\'ve been decorating homes since before you were born, dear."',
     boost:{label:'⚡ Max Energy',value:'+6'},
-    unlock:{conditions:[{label:'Complete 15 rooms',c:11,t:15},{label:'Reach Level 25',c:18,t:25}]} },
+    unlock:{conditions:[{label:'Complete 15 rooms',c:11,t:15}]} },
   { id:'rex', name:'???', fullName:'Captain Rex', rarity:'epic', unlocked:false, give:'reward',
-    reward:{type:'gold',label:'🪙 25 gold'},
+    reward:{type:'gold',label:'🪙 7 gold'},
     quote:'"A captain always goes down with his ship... unless there\'s merge chains."',
     boost:null,
-    unlock:{conditions:[{label:'Spend 100K coins',c:42000,t:100000},{label:'Complete 200 orders',c:87,t:200}]} },
+    unlock:{conditions:[{label:'Complete 200 orders',c:87,t:200}]} },
   { id:'penny', name:'Penny', fullName:'Penny the Postwoman', rarity:'common', unlocked:false, progress:45, give:'reward',
-    reward:{type:'energy',label:'⚡ 12 energy'},
+    reward:{type:'energy',label:'⚡ 3 energy'},
     quote:'"Rain, snow, or merge fever — the mail always gets through."',
     boost:null, dailyTask:{label:'Complete 10 orders',icon:'📋'},
     unlock:{conditions:[{label:'Complete 100 orders',c:45,t:100}]} },
@@ -682,7 +684,7 @@ const neighbors = [
 
   // ── Row 3: Seasonal ──
   { id:'sparky', name:'???', fullName:'Sparky', rarity:'common', unlocked:false, seasonal:'🎆', returns:'Jul 2026', give:'reward',
-    reward:{type:'energy',label:'⚡ 12 energy'}, boost:null, unlock:null },
+    reward:{type:'energy',label:'⚡ 3 energy'}, boost:null, unlock:null },
   { id:'holly', name:'???', fullName:'Holly', rarity:'common', unlocked:false, seasonal:'🎄', returns:'Dec 2026', give:'boost',
     reward:null, boost:{label:'🫧 Bubble Discount',value:'-10%'}, unlock:null },
   { id:'cupid', name:'Cupid', fullName:'Cupid', rarity:'rare', unlocked:false, isIAP:true, iapPrice:'$4.99', iapTimer:'2d 14h', give:'boost',
@@ -691,13 +693,13 @@ const neighbors = [
     boost:{label:'🔄 Recharge Discount',value:'-5%'},
     iapBundle:[{label:'⚡ 100 Energy'},{label:'🪙 250 Gold'}] },
   { id:'jack', name:'???', fullName:'Jack O\'Lantern', rarity:'rare', unlocked:false, seasonal:'🎃', returns:'Oct 2026', give:'reward',
-    reward:{type:'gold',label:'🪙 15 gold'}, boost:null, unlock:null },
+    reward:{type:'gold',label:'🪙 5 gold'}, boost:null, unlock:null },
 
   // ── Row 4: Mix (new) ──
   { id:'aurora', name:'???', fullName:'Aurora', rarity:'epic', unlocked:false, seasonal:'🌸', returns:'Apr 2027', give:'boost',
     reward:null, boost:{label:'⏱️ Regen Rate',value:'+10%'}, unlock:null },
   { id:'nikolai', name:'???', fullName:'Nikolai', rarity:'epic', unlocked:false, seasonal:'❄️', returns:'Jan 2027', give:'reward',
-    reward:{type:'energy',label:'⚡ 20 energy'}, boost:null, unlock:null },
+    reward:{type:'energy',label:'⚡ 7 energy'}, boost:null, unlock:null },
   { id:'ivy', name:'Ivy', fullName:'Ivy the Florist', rarity:'rare', unlocked:false, give:'boost',
     reward:null,
     quote:'"Every petal has a purpose."',
@@ -707,23 +709,23 @@ const neighbors = [
     reward:null,
     quote:'"Forged in fire, merged in style."',
     boost:{label:'⚡ Max Energy',value:'+4'},
-    unlock:{conditions:[{label:'Complete 20 rooms',c:8,t:20},{label:'Win Merge League 5x',c:1,t:5}]} },
+    unlock:{conditions:[{label:'Win Merge League 5x',c:1,t:5}]} },
 
   // ── Row 5: Mix (new) ──
   { id:'mei', name:'Mei', fullName:'Mei the Chef', rarity:'common', unlocked:false, give:'reward',
-    reward:{type:'gold',label:'🪙 10 gold'},
+    reward:{type:'gold',label:'🪙 3 gold'},
     quote:'"Good food brings good neighbors."',
     boost:null, dailyTask:{label:'Watch 5 ads',icon:'📺'},
     unlock:{conditions:[{label:'Reach Level 10',c:8,t:10}]} },
   { id:'boris', name:'Boris', fullName:'Boris the Fisherman', rarity:'rare', unlocked:false, give:'reward',
-    reward:{type:'energy',label:'⚡ 15 energy'},
+    reward:{type:'energy',label:'⚡ 5 energy'},
     quote:'"Patience is the best bait."',
     boost:null, dailyTask:{label:'Merge 20 items',icon:'🔀'},
     unlock:{conditions:[{label:'Win Merge Fever 3x',c:0,t:3}]} },
   { id:'luna', name:'???', fullName:'Luna', rarity:'rare', unlocked:false, seasonal:'🌙', returns:'Sep 2026', give:'boost',
     reward:null, boost:{label:'🔄 Recharge Discount',value:'-3%'}, unlock:null },
   { id:'dante', name:'???', fullName:'Dante', rarity:'epic', unlocked:false, seasonal:'🔥', returns:'Mar 2027', give:'reward',
-    reward:{type:'gold',label:'🪙 30 gold'}, boost:null, unlock:null }
+    reward:{type:'gold',label:'🪙 7 gold'}, boost:null, unlock:null }
 ];
 
 // Render grid
@@ -764,9 +766,11 @@ function renderGrid() {
       taskHtml = `<span class="reward-text" style="font-size:8px;color:#8d7a5a;">${n.dailyTask.icon} ${n.dailyTask.label}</span>`;
     }
 
+    const nameCls = isLocked ? 'locked' : (n.dailyTask ? 'has-task' : 'active');
+
     return `
       <div class="neighbor-card ${n.rarity}" onclick="showDetail('${n.id}')">
-        <div class="card-header"><span class="neighbor-name${isLocked?' locked':''}">${n.name}</span></div>
+        <div class="card-header"><span class="neighbor-name ${nameCls}">${n.name}</span></div>
         <div class="card-body">
           <div class="avatar-wrap">
             <img class="${avatarCls}" src="${AVATARS[n.id]}" alt="${n.name}">
