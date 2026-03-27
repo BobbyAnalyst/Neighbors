@@ -219,6 +219,8 @@
     letter-spacing: 0.5px;
   }
   .claim-all-btn-big:hover { transform: scale(1.05); }
+  .claim-all-btn-big:not(.disabled) { animation: claimBounce 1.5s ease-in-out infinite; }
+  @keyframes claimBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
   .claim-all-btn-big.disabled { background: linear-gradient(180deg, #78909c, #546e7a); border-color: #37474f; box-shadow: none; cursor: default; }
 
   /* ══ INFO ICON ══ */
