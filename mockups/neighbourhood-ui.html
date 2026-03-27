@@ -917,12 +917,6 @@ function showDetail(id) {
     else if (n.unlocked) h += `<span class="detail-row-value">Collected ✓</span>`;
     else h += `<span class="detail-row-value">—</span>`;
     h += `</div>`;
-    // Daily task requirement
-    if (n.dailyTask) {
-      h += `<div class="detail-row" style="border-top:1px dashed rgba(0,0,0,0.08);padding-top:6px;margin-top:4px;">`;
-      h += `<span class="detail-row-label">${n.dailyTask.icon} Requires</span>`;
-      h += `<span class="detail-row-value" style="font-size:11px;">${n.dailyTask.label}</span></div>`;
-    }
     h += `</div>`;
   } else if (n.give === 'boost' && n.boost) {
     h += `<div class="detail-section"><div class="detail-section-title">Permanent Boost${!n.unlocked?' (Locked)':''}</div>`;
@@ -931,17 +925,23 @@ function showDetail(id) {
     h += `</div></div>`;
   }
 
-  // Unlock
-  if (!n.unlocked && n.unlock) {
+  // How to Unlock (includes daily task if applicable)
+  if (!n.unlocked && (n.unlock || n.dailyTask)) {
     h += `<div class="detail-section"><div class="detail-section-title">How to Unlock</div>`;
-    let tp=0;
-    n.unlock.conditions.forEach(c => {
-      const p=Math.round(c.c/c.t*100); tp+=p;
-      h += `<div class="detail-row"><span class="detail-row-label">${c.label}</span><span style="color:#7b1fa2;font-weight:900;font-size:12px;">${c.c.toLocaleString()}/${c.t.toLocaleString()}</span></div>`;
-    });
-    const ap=Math.round(tp/n.unlock.conditions.length);
-    h += `<div class="detail-progress-bar"><div class="detail-progress-fill" style="width:${ap}%;background:linear-gradient(90deg,#ab47bc,#ce93d8)"></div></div>`;
-    h += `<div class="detail-progress-text">${ap}%</div></div>`;
+    if (n.unlock) {
+      let tp=0;
+      n.unlock.conditions.forEach(c => {
+        const p=Math.round(c.c/c.t*100); tp+=p;
+        h += `<div class="detail-row"><span class="detail-row-label">${c.label}</span><span style="color:#7b1fa2;font-weight:900;font-size:12px;">${c.c.toLocaleString()}/${c.t.toLocaleString()}</span></div>`;
+      });
+      const ap=Math.round(tp/n.unlock.conditions.length);
+      h += `<div class="detail-progress-bar"><div class="detail-progress-fill" style="width:${ap}%;background:linear-gradient(90deg,#ab47bc,#ce93d8)"></div></div>`;
+      h += `<div class="detail-progress-text">${ap}%</div>`;
+    }
+    if (n.dailyTask) {
+      h += `<div class="detail-row" style="margin-top:6px;"><span class="detail-row-label">${n.dailyTask.icon} Daily task</span><span class="detail-row-value" style="font-size:11px;">${n.dailyTask.label}</span></div>`;
+    }
+    h += `</div>`;
   }
 
   // IAP
