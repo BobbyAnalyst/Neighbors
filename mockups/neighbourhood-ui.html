@@ -834,12 +834,10 @@ function renderGrid() {
     const headerCls = `rarity-${n.rarity}`;
     const bodyCls = isLocked ? ' locked-body' : '';
 
-    // Event tag for event-linked neighbors
+    // Event tag — only for the currently active event neighbor
     let eventHtml = '';
     if (n.activeEvent && isLocked) {
       eventHtml = `<span class="event-tag">WIN NOW</span>`;
-    } else if (n.eventName && isLocked && !n.isIAP) {
-      eventHtml = `<span class="event-tag">${n.eventName}</span>`;
     }
 
     // Progress bar for active event
