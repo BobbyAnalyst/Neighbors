@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mergedom — Neighbours UI Mockup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #3a4f6e;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+    min-height: 100vh;
+    color: #fff;
+  }
+
+  h1.page-title { font-size: 26px; font-weight: 900; color: #ffd740; text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-bottom: 4px; }
+  .page-subtitle { font-size: 13px; color: #a0b8d8; margin-bottom: 24px; }
+
+  /* ══ PHONE ══ */
+  .phone {
+    width: 375px; height: 812px;
+    background: linear-gradient(180deg, #2196f3, #1565c0 50%, #0d47a1);
+    border-radius: 36px; border: 3px solid #4a3520;
+    overflow: hidden; display: flex; flex-direction: column; position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  /* ══ RESOURCE BAR ══ */
+  .resource-bar {
+    height: 50px; background: linear-gradient(180deg, #1565c0, #1976d2);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 4px 8px; flex-shrink: 0;
+  }
+  .res-pill {
+    display: flex; align-items: center; gap: 3px;
+    background: rgba(0,0,0,0.25); border-radius: 14px;
+    padding: 3px 8px 3px 3px; border: 1.5px solid rgba(255,255,255,0.1);
+    font-size: 12px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .res-icon {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; border: 1.5px solid rgba(255,255,255,0.2);
+  }
+  .res-icon.energy { background: linear-gradient(135deg, #4fc3f7, #0288d1); }
+  .res-icon.bolt { background: linear-gradient(135deg, #81c784, #388e3c); }
+  .res-icon.star { background: linear-gradient(135deg, #ffd54f, #f9a825); }
+  .res-icon.coins { background: linear-gradient(135deg, #ffb74d, #e65100); }
+  .res-plus { width: 15px; height: 15px; border-radius: 50%; background: linear-gradient(135deg, #66bb6a, #2e7d32); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #fff; margin-left: 1px; border: 1px solid rgba(255,255,255,0.3); }
+  .settings-btn { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #ffd54f, #f9a825); border: 2px solid #c67c00; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+  /* ══ BOOK TABS ══ */
+  .book-tabs {
+    height: 48px; background: linear-gradient(180deg, #37474f, #263238);
+    display: flex; align-items: stretch; flex-shrink: 0;
+    gap: 2px; padding: 4px 4px;
+    border-top: 2px solid #ffc107; border-bottom: 2px solid rgba(0,0,0,0.3);
+  }
+  .book-tab {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; color: #78909c;
+    cursor: pointer; border-radius: 6px; background: rgba(0,0,0,0.15);
+    transition: all 0.15s; gap: 3px; border: 1.5px solid transparent;
+    user-select: none;
+  }
+  .book-tab:hover { background: rgba(255,255,255,0.05); }
+  .book-tab.active { color: #fff; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.12); }
+  .tab-icon { font-size: 16px; opacity: 0.6; }
+  .book-tab.active .tab-icon { opacity: 1; }
+
+  /* ══ ITEMS SUB-TABS ══ */
+  .items-subtabs {
+    height: 38px; background: rgba(0,0,0,0.15);
+    display: flex; align-items: stretch; gap: 2px; padding: 3px 6px;
+    border-bottom: 1px solid rgba(0,0,0,0.15); flex-shrink: 0;
+  }
+  .items-subtab {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800; color: #90caf9;
+    cursor: pointer; border-radius: 5px; background: rgba(0,0,0,0.1);
+    transition: all 0.15s; user-select: none;
+  }
+  .items-subtab.active { color: #fff; background: rgba(255,255,255,0.12); }
+
+  /* ══ CONTENT ══ */
+  .content {
+    flex: 1; overflow-y: auto; padding: 12px 10px;
+    background: linear-gradient(180deg, #1976d2, #1565c0 40%, #0d47a1);
+  }
+  .content::-webkit-scrollbar { width: 4px; }
+  .content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ══ SECTION HEADER ══ */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px; padding: 0 2px;
+  }
+  .section-title { font-size: 17px; font-weight: 900; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+  .unlock-count { font-size: 11px; font-weight: 800; color: #ffd740; background: rgba(0,0,0,0.25); padding: 3px 9px; border-radius: 10px; margin-left: 8px; border: 1px solid rgba(255,215,0,0.3); }
+
+  .claim-all-btn {
+    background: linear-gradient(180deg, #66bb6a, #388e3c); color: #fff;
+    border: 2px solid #1b5e20; padding: 6px 14px; border-radius: 14px;
+    font-size: 11px; font-weight: 900; font-family: inherit; cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3); transition: all 0.15s;
+  }
+  .claim-all-btn:hover { transform: scale(1.05); }
+  .claim-all-btn.disabled { background: linear-gradient(180deg, #78909c, #546e7a); border-color: #37474f; box-shadow: none; cursor: default; }
+
+  /* ═══════════════════════ */
+  /* ══ MERGEDOM CARDS ══   */
+  /* ═══════════════════════ */
+  .neighbor-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 14px; }
+
+  .neighbor-card {
+    background: linear-gradient(180deg, #2196f3, #1565c0);
+    border-radius: 11px; display: flex; flex-direction: column; align-items: center;
+    position: relative; cursor: pointer; transition: all 0.15s; overflow: hidden;
+  }
+  .neighbor-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.3); }
+  .neighbor-card.common { border: 2.5px solid #8d6e3f; }
+  .neighbor-card.rare { border: 2.5px solid #c8a23c; }
+  .neighbor-card.epic { border: 2.5px solid #e6c02e; box-shadow: 0 0 10px rgba(230,192,46,0.12); }
+
+  .card-header {
+    width: 100%; background: linear-gradient(180deg, #1e88e5, #1565c0);
+    padding: 3px 3px 2px; text-align: center; border-bottom: 1.5px solid rgba(0,0,0,0.15);
+  }
+  .neighbor-name { font-size: 9.5px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+  .neighbor-name.locked { color: #90caf9; font-style: italic; }
+
+  .card-body {
+    width: 100%; background: linear-gradient(180deg, #f5e6c8, #e8d5b0);
+    padding: 6px 4px 7px; display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1;
+  }
+
+  /* ══ AVATAR ══ */
+  .avatar {
+    width: 50px; height: 50px; border-radius: 50%;
+    object-fit: cover; position: relative;
+    border: 2px solid rgba(141,110,63,0.4);
+  }
+  .avatar-wrap { position: relative; display: inline-block; }
+
+  .avatar.locked { filter: brightness(0.4) grayscale(0.8); border-color: rgba(0,0,0,0.15); }
+
+  .reward-badge {
+    position: absolute; top: -4px; right: -8px;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 900; border: 2px solid #e8d5b0;
+    animation: bounce 1.5s ease-in-out infinite; z-index: 2;
+  }
+  .reward-badge.gold { background: linear-gradient(135deg, #ffd700, #f0a000); color: #5a4000; }
+  .reward-badge.energy { background: linear-gradient(135deg, #4fc3f7, #0288d1); color: #fff; }
+  .reward-badge.item { background: linear-gradient(135deg, #ff7043, #d84315); color: #fff; }
+  .reward-badge.booster { background: linear-gradient(135deg, #ab47bc, #7b1fa2); color: #fff; }
+
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+
+  .seasonal-badge { position: absolute; top: -6px; left: -6px; font-size: 13px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); z-index: 2; }
+  .iap-badge { position: absolute; top: -6px; left: -6px; width: 18px; height: 18px; background: linear-gradient(135deg, #ffd700, #ff8f00); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #5a2d00; border: 2px solid #e8d5b0; animation: pulse 2s ease-in-out infinite; z-index: 2; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,0.5)} 50%{box-shadow:0 0 0 5px rgba(255,215,0,0)} }
+
+  .lock-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #a08060; }
+
+  .reward-text { font-size: 10px; font-weight: 800; color: #6d5a3a; }
+  .reward-text.gold-text { color: #b8860b; }
+  .reward-text.energy-text { color: #0277bd; }
+  .reward-text.item-text { color: #d84315; }
+  .reward-text.booster-text { color: #7b1fa2; }
+
+  .rarity-label { font-size: 7.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; padding: 1px 5px; border-radius: 3px; }
+  .rarity-label.common { color: #5d7a3a; background: rgba(93,122,58,0.15); }
+  .rarity-label.rare { color: #1565c0; background: rgba(21,101,192,0.12); }
+  .rarity-label.epic { color: #7b1fa2; background: rgba(123,31,162,0.12); }
+
+  .progress-bar { width: 85%; height: 4px; background: rgba(0,0,0,0.1); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; }
+  .progress-fill.common { background: linear-gradient(90deg, #8bc34a, #689f38); }
+  .progress-fill.rare { background: linear-gradient(90deg, #42a5f5, #1976d2); }
+  .progress-fill.epic { background: linear-gradient(90deg, #ab47bc, #7b1fa2); }
+
+  .timer-text { font-size: 9px; font-weight: 700; color: #8d7a5a; }
+  .returns-text { font-size: 9px; font-weight: 700; color: #8d7a5a; font-style: italic; }
+  .countdown { font-size: 9px; font-weight: 800; color: #e65100; }
+
+  /* ══ BOOSTS BAR ══ */
+  .boosts-bar {
+    background: linear-gradient(180deg, #0d47a1, #0a3680);
+    border-top: 2px solid rgba(255,255,255,0.08);
+    padding: 7px 10px 5px; flex-shrink: 0;
+  }
+  .boosts-title { font-size: 8px; font-weight: 800; color: #64b5f6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .boosts-row { display: flex; gap: 4px; flex-wrap: wrap; }
+  .boost-chip { display: flex; align-items: center; gap: 3px; background: rgba(255,255,255,0.08); padding: 3px 7px; border-radius: 7px; font-size: 10px; font-weight: 800; color: #bbdefb; border: 1px solid rgba(255,255,255,0.06); }
+  .boost-chip .val { color: #ffd740; }
+
+  /* ══ BOTTOM NAV ══ */
+  .bottom-nav {
+    height: 60px; background: linear-gradient(180deg, #42a5f5, #1e88e5);
+    display: flex; align-items: center; justify-content: space-around;
+    flex-shrink: 0; border-top: 3px solid #ffc107; padding: 0 4px;
+  }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 1px; cursor: pointer; position: relative; width: 52px; }
+  .nav-icon-box { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.15s; }
+  .nav-icon-box.shop { background: linear-gradient(135deg, #ef5350, #c62828); border: 2px solid #b71c1c; }
+  .nav-icon-box.trophy { background: linear-gradient(135deg, #ffd54f, #f9a825); border: 2px solid #c67c00; }
+  .nav-icon-box.home { background: linear-gradient(135deg, #ef5350, #c62828); border: 2px solid #b71c1c; }
+  .nav-icon-box.team { background: linear-gradient(135deg, #ef5350, #c62828); border: 2px solid #b71c1c; }
+  .nav-icon-box.book { background: linear-gradient(135deg, #c62828, #8e0000); border: 2px solid #7f0000; }
+  .nav-item.active .nav-icon-box { box-shadow: 0 0 12px rgba(255,255,255,0.3); transform: scale(1.08); }
+  .nav-label { font-size: 8px; font-weight: 800; color: rgba(255,255,255,0.6); text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+  .nav-item.active .nav-label { color: #fff; }
+  .nav-badge { position: absolute; top: -2px; right: 0; width: 16px; height: 16px; background: linear-gradient(135deg, #ff1744, #d50000); border-radius: 50%; font-size: 9px; font-weight: 900; color: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid #1e88e5; z-index: 2; }
+
+  /* ══ ROOMS CONTENT ══ */
+  .room-card {
+    background: linear-gradient(180deg, #2196f3, #1565c0);
+    border: 2.5px solid #c8a23c; border-radius: 14px;
+    overflow: hidden; margin-bottom: 12px;
+  }
+  .room-card-header {
+    background: linear-gradient(180deg, #1e88e5, #1565c0);
+    padding: 8px 14px; text-align: center;
+    font-size: 16px; font-weight: 900; color: #fff;
+    text-shadow: 0 2px 3px rgba(0,0,0,0.3);
+    border-bottom: 2px solid rgba(0,0,0,0.12);
+  }
+  .room-card-body {
+    background: linear-gradient(180deg, #f5e6c8, #e8d5b0);
+    padding: 12px 14px; display: flex; align-items: center; gap: 12px;
+  }
+  .room-thumb { width: 64px; height: 64px; border-radius: 10px; background: linear-gradient(135deg, #fff8e1, #ffe0b2); border: 2px solid rgba(141,110,63,0.3); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+  .room-info { flex: 1; }
+  .room-info .progress-label { font-size: 11px; font-weight: 700; color: #6d5a3a; margin-bottom: 4px; }
+  .room-progress { width: 100%; height: 8px; background: rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); }
+  .room-progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #66bb6a, #388e3c); box-shadow: inset 0 1px 0 rgba(255,255,255,0.3); }
+  .room-stars { font-size: 10px; font-weight: 800; color: #8d7a5a; margin-top: 4px; }
+  .room-status { font-size: 10px; font-weight: 900; padding: 3px 10px; border-radius: 8px; }
+  .room-status.complete { background: rgba(46,125,50,0.15); color: #2e7d32; }
+  .room-status.current { background: rgba(21,101,192,0.15); color: #1565c0; }
+  .room-status.locked { background: rgba(0,0,0,0.06); color: #8d7a5a; }
+
+  /* ══ ITEMS CONTENT ══ */
+  .item-section { margin-bottom: 14px; }
+  .item-section-card {
+    background: linear-gradient(180deg, #2196f3, #1565c0);
+    border: 2.5px solid #c8a23c; border-radius: 14px; overflow: hidden;
+  }
+  .item-section-header {
+    background: linear-gradient(180deg, #1e88e5, #1565c0);
+    padding: 8px 14px; font-size: 15px; font-weight: 900; color: #fff;
+    text-shadow: 0 2px 3px rgba(0,0,0,0.3); text-align: center;
+    border-bottom: 2px solid rgba(0,0,0,0.12);
+  }
+  .item-section-body {
+    background: linear-gradient(180deg, #f5e6c8, #e8d5b0);
+    padding: 12px; display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .item-thumb {
+    width: 56px; height: 56px; border-radius: 10px;
+    background: rgba(255,255,255,0.5); border: 1.5px solid rgba(141,110,63,0.2);
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    font-size: 22px; position: relative;
+  }
+  .item-thumb.locked { opacity: 0.4; }
+  .item-count { font-size: 8px; font-weight: 800; color: #6d5a3a; }
+
+  /* ══ DETAIL OVERLAY ══ */
+  .detail-overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.65);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10; opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .detail-overlay.visible { opacity: 1; pointer-events: all; }
+
+  .detail-card {
+    width: 316px; background: linear-gradient(180deg, #2196f3, #1565c0);
+    border-radius: 18px; border: 3px solid #c8a23c; overflow: hidden;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 20px rgba(200,162,60,0.12);
+    transform: scale(0.92); transition: transform 0.25s;
+  }
+  .detail-overlay.visible .detail-card { transform: scale(1); }
+
+  .detail-card-header {
+    background: linear-gradient(180deg, #1e88e5, #1565c0);
+    padding: 16px 18px 12px; text-align: center; position: relative;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+  }
+  .detail-close {
+    position: absolute; top: 8px; right: 10px; width: 26px; height: 26px;
+    background: rgba(0,0,0,0.25); border: 1.5px solid rgba(255,255,255,0.15);
+    border-radius: 50%; color: #fff; font-size: 15px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-family: inherit; font-weight: 700;
+  }
+  .detail-close:hover { background: rgba(0,0,0,0.4); }
+
+  .detail-avatar { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; margin: 0 auto 8px; display: block; }
+  .detail-avatar.common-border { border: 3px solid #8d6e3f; }
+  .detail-avatar.rare-border { border: 3px solid #c8a23c; }
+  .detail-avatar.epic-border { border: 3px solid #e6c02e; box-shadow: 0 0 14px rgba(230,192,46,0.2); }
+  .detail-avatar.locked-style { filter: brightness(0.35) grayscale(0.8); }
+
+  .detail-name { font-size: 17px; font-weight: 900; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+  .detail-rarity { font-size: 11px; font-weight: 700; margin-top: 2px; }
+  .detail-rarity.common { color: #a5d6a7; }
+  .detail-rarity.rare { color: #90caf9; }
+  .detail-rarity.epic { color: #ce93d8; }
+  .detail-quote { font-size: 11px; font-style: italic; color: #bbdefb; margin-top: 4px; line-height: 1.3; }
+
+  .detail-card-body { background: linear-gradient(180deg, #f5e6c8, #e8d5b0); padding: 14px 16px; }
+  .detail-section { margin-bottom: 12px; }
+  .detail-section:last-child { margin-bottom: 0; }
+  .detail-section-title { font-size: 10px; font-weight: 900; color: #6d5a3a; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; padding-bottom: 3px; border-bottom: 1.5px solid rgba(0,0,0,0.08); }
+  .detail-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
+  .detail-row-label { font-size: 12px; font-weight: 700; color: #5d4e35; display: flex; align-items: center; gap: 4px; }
+  .detail-row-value { font-size: 12px; font-weight: 800; color: #8d7a5a; }
+
+  .collect-btn {
+    background: linear-gradient(180deg, #66bb6a, #388e3c); color: #fff;
+    border: 2px solid #1b5e20; padding: 4px 12px; border-radius: 12px;
+    font-size: 10px; font-weight: 900; font-family: inherit; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+    text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+  }
+  .active-label { color: #2e7d32; font-size: 10px; font-weight: 900; background: rgba(46,125,50,0.1); padding: 2px 7px; border-radius: 5px; }
+
+  .detail-progress-bar { width: 100%; height: 8px; background: rgba(0,0,0,0.08); border-radius: 4px; overflow: hidden; margin-top: 6px; border: 1px solid rgba(0,0,0,0.06); }
+  .detail-progress-fill { height: 100%; border-radius: 4px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3); }
+  .detail-progress-text { font-size: 10px; font-weight: 800; color: #6d5a3a; margin-top: 3px; text-align: right; }
+
+  .iap-button {
+    display: block; margin: 10px auto 0;
+    background: linear-gradient(180deg, #ffd54f, #f9a825); color: #5d4037;
+    border: 2.5px solid #c67c00; padding: 10px 28px; border-radius: 20px;
+    font-size: 14px; font-weight: 900; font-family: inherit; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.4);
+    text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  }
+  .iap-subtext { font-size: 9px; color: #8d7a5a; text-align: center; margin-top: 5px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Mergedom — Neighbours</h1>
+<p class="page-subtitle">Interactive Mockup &bull; Navigate all tabs</p>
+
+<div class="phone" id="phone">
+  <!-- Resource Bar -->
+  <div class="resource-bar">
+    <div class="res-pill"><div class="res-icon energy">⚡</div>15</div>
+    <div class="res-pill"><div class="res-icon bolt">⚡</div>159<div class="res-plus">+</div></div>
+    <div class="res-pill"><div class="res-icon star">⭐</div>10</div>
+    <div class="res-pill"><div class="res-icon coins">🏠</div>1130<div class="res-plus">+</div></div>
+    <div class="settings-btn">⚙️</div>
+  </div>
+
+  <!-- Book Tabs -->
+  <div class="book-tabs">
+    <div class="book-tab" onclick="switchMainTab('rooms',this)"><span class="tab-icon">🏠</span></div>
+    <div class="book-tab active" onclick="switchMainTab('neighbours',this)"><span class="tab-icon">👥</span> <span class="tab-text">Neighbours</span></div>
+    <div class="book-tab" onclick="switchMainTab('items',this)"><span class="tab-icon">📦</span> <span class="tab-text">Items</span></div>
+  </div>
+
+  <!-- Items Sub-tabs (hidden unless Items active) -->
+  <div class="items-subtabs" id="items-subtabs" style="display:none;">
+    <div class="items-subtab active" onclick="switchItemsTab('tools',this)">🔧 Tools</div>
+    <div class="items-subtab" onclick="switchItemsTab('factory',this)">🏭 Factory</div>
+    <div class="items-subtab" onclick="switchItemsTab('chests',this)">📦 Chests</div>
+    <div class="items-subtab" onclick="switchItemsTab('star',this)">⭐ Star</div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- ══ ROOMS TAB ══ -->
+    <div class="tab-content" id="tab-rooms">
+      <div class="section-header">
+        <span class="section-title">Rooms</span>
+        <span class="unlock-count">8 / 27</span>
+      </div>
+
+      <div class="room-card">
+        <div class="room-card-header">Living Room</div>
+        <div class="room-card-body">
+          <div class="room-thumb">🛋️</div>
+          <div class="room-info">
+            <div class="progress-label">Tasks: 12/12</div>
+            <div class="room-progress"><div class="room-progress-fill" style="width:100%"></div></div>
+            <div class="room-stars">⭐ 36 stars earned</div>
+          </div>
+          <span class="room-status complete">Done</span>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="room-card-header">Kitchen</div>
+        <div class="room-card-body">
+          <div class="room-thumb">🍳</div>
+          <div class="room-info">
+            <div class="progress-label">Tasks: 12/12</div>
+            <div class="room-progress"><div class="room-progress-fill" style="width:100%"></div></div>
+            <div class="room-stars">⭐ 36 stars earned</div>
+          </div>
+          <span class="room-status complete">Done</span>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="room-card-header">Bedroom</div>
+        <div class="room-card-body">
+          <div class="room-thumb">🛏️</div>
+          <div class="room-info">
+            <div class="progress-label">Tasks: 8/14</div>
+            <div class="room-progress"><div class="room-progress-fill" style="width:57%"></div></div>
+            <div class="room-stars">⭐ 24 / 42 stars</div>
+          </div>
+          <span class="room-status current">Current</span>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="room-card-header">Bathroom</div>
+        <div class="room-card-body">
+          <div class="room-thumb">🚿</div>
+          <div class="room-info">
+            <div class="progress-label">Tasks: 0/10</div>
+            <div class="room-progress"><div class="room-progress-fill" style="width:0%"></div></div>
+            <div class="room-stars">🔒 Locked</div>
+          </div>
+          <span class="room-status locked">Locked</span>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="room-card-header">Study Room</div>
+        <div class="room-card-body">
+          <div class="room-thumb">📚</div>
+          <div class="room-info">
+            <div class="progress-label">Tasks: 0/12</div>
+            <div class="room-progress"><div class="room-progress-fill" style="width:0%"></div></div>
+            <div class="room-stars">🔒 Locked</div>
+          </div>
+          <span class="room-status locked">Locked</span>
+        </div>
+      </div>
+
+      <div class="room-card">
+        <div class="room-card-header">TV Room</div>
+        <div class="room-card-body">
+          <div class="room-thumb">📺</div>
+          <div class="room-info">
+            <div class="progress-label">Tasks: 0/11</div>
+            <div class="room-progress"><div class="room-progress-fill" style="width:0%"></div></div>
+            <div class="room-stars">🔒 Locked</div>
+          </div>
+          <span class="room-status locked">Locked</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ NEIGHBOURS TAB ══ -->
+    <div class="tab-content active" id="tab-neighbours">
+      <div class="section-header">
+        <div style="display:flex;align-items:center;">
+          <span class="section-title">My Neighbourhood</span>
+          <span class="unlock-count">4 / 20</span>
+        </div>
+        <button class="claim-all-btn" id="claim-btn" onclick="claimAll()">Claim All</button>
+      </div>
+
+      <div class="neighbor-grid" id="neighbor-grid">
+        <!-- Cards injected by JS -->
+      </div>
+    </div>
+
+    <!-- ══ ITEMS TAB ══ -->
+    <div class="tab-content" id="tab-items">
+      <!-- Tools -->
+      <div class="items-tab-content active" id="itemstab-tools">
+        <div class="item-section">
+          <div class="item-section-card">
+            <div class="item-section-header">Cleaning Tools</div>
+            <div class="item-section-body">
+              <div class="item-thumb">🧹<span class="item-count">1</span></div>
+              <div class="item-thumb">🧽<span class="item-count">2</span></div>
+              <div class="item-thumb">🧴<span class="item-count">3</span></div>
+              <div class="item-thumb">🪣<span class="item-count">4</span></div>
+              <div class="item-thumb locked">🔒<span class="item-count">5</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-section">
+          <div class="item-section-card">
+            <div class="item-section-header">Soap</div>
+            <div class="item-section-body">
+              <div class="item-thumb">🧼<span class="item-count">1</span></div>
+              <div class="item-thumb">🫧<span class="item-count">2</span></div>
+              <div class="item-thumb locked">🔒<span class="item-count">3</span></div>
+              <div class="item-thumb locked">🔒<span class="item-count">4</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Factory -->
+      <div class="items-tab-content" id="itemstab-factory" style="display:none;">
+        <div class="item-section">
+          <div class="item-section-card">
+            <div class="item-section-header">Kitchen Utensils</div>
+            <div class="item-section-body">
+              <div class="item-thumb">🍴<span class="item-count">1</span></div>
+              <div class="item-thumb">🥄<span class="item-count">2</span></div>
+              <div class="item-thumb">🔪<span class="item-count">3</span></div>
+              <div class="item-thumb locked">🔒<span class="item-count">4</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-section">
+          <div class="item-section-card">
+            <div class="item-section-header">Cookies</div>
+            <div class="item-section-body">
+              <div class="item-thumb">🍪<span class="item-count">1</span></div>
+              <div class="item-thumb">🧁<span class="item-count">2</span></div>
+              <div class="item-thumb">🎂<span class="item-count">3</span></div>
+              <div class="item-thumb locked">🔒<span class="item-count">4</span></div>
+              <div class="item-thumb locked">🔒<span class="item-count">5</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Chests -->
+      <div class="items-tab-content" id="itemstab-chests" style="display:none;">
+        <div class="item-section">
+          <div class="item-section-card">
+            <div class="item-section-header">Chest</div>
+            <div class="item-section-body">
+              <div class="item-thumb">📦<span class="item-count">1</span></div>
+              <div class="item-thumb">📦<span class="item-count">2</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-section">
+          <div class="item-section-card">
+            <div class="item-section-header">Rustic Chest</div>
+            <div class="item-section-body">
+              <div class="item-thumb locked">🔒<span class="item-count">1</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-section">
+          <div class="item-section-card">
+            <div class="item-section-header">Royal Chest</div>
+            <div class="item-section-body">
+              <div class="item-thumb locked">🔒<span class="item-count">1</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Star -->
+      <div class="items-tab-content" id="itemstab-star" style="display:none;">
+        <div class="item-section">
+          <div class="item-section-card">
+            <div class="item-section-header">Stars & Achievements</div>
+            <div class="item-section-body">
+              <div class="item-thumb">⭐<span class="item-count">1</span></div>
+              <div class="item-thumb">🌟<span class="item-count">2</span></div>
+              <div class="item-thumb">💫<span class="item-count">3</span></div>
+              <div class="item-thumb locked">🔒<span class="item-count">4</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Boosts Bar (only visible on neighbours tab) -->
+  <div class="boosts-bar" id="boosts-bar">
+    <div class="boosts-title">Active Boosts</div>
+    <div class="boosts-row">
+      <div class="boost-chip">⚡<span class="val">+4</span> Max</div>
+      <div class="boost-chip">🔄<span class="val">-5%</span> Rech</div>
+      <div class="boost-chip">⏱️<span class="val">+0%</span> Regen</div>
+      <div class="boost-chip">📦<span class="val">+0</span> Amt</div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <div class="nav-item"><div class="nav-icon-box shop">🏪</div><span class="nav-label">Shop</span></div>
+    <div class="nav-item"><div class="nav-icon-box trophy">🏆</div><span class="nav-label">Trophy</span></div>
+    <div class="nav-item"><div class="nav-icon-box home">🏠</div><span class="nav-label">Home</span></div>
+    <div class="nav-item"><div class="nav-icon-box team">👥</div><span class="nav-label">Team</span></div>
+    <div class="nav-item active"><div class="nav-icon-box book">📖</div><span class="nav-label">Book</span><div class="nav-badge">3</div></div>
+  </div>
+
+  <!-- Detail Overlay -->
+  <div class="detail-overlay" id="detail-overlay" onclick="hideDetail(event)">
+    <div class="detail-card" id="detail-content" onclick="event.stopPropagation()"></div>
+  </div>
+</div>
+
+<p style="font-size:11px;color:#7a9cc0;margin-top:10px;font-style:italic;">Tap between Rooms / Neighbours / Items tabs. Tap neighbors for details.</p>
+
+<script>
+const AVATARS = {
+  marta:   'https://i.pravatar.cc/150?img=32',
+  felix:   'https://i.pravatar.cc/150?img=11',
+  otto:    'https://i.pravatar.cc/150?img=59',
+  rosa:    'https://i.pravatar.cc/150?img=44',
+  elise:   'https://i.pravatar.cc/150?img=47',
+  rex:     'https://i.pravatar.cc/150?img=68',
+  sparky:  'https://i.pravatar.cc/150?img=13',
+  holly:   'https://i.pravatar.cc/150?img=25',
+  cupid:   'https://i.pravatar.cc/150?img=5',
+  jack:    'https://i.pravatar.cc/150?img=53',
+  aurora:  'https://i.pravatar.cc/150?img=23',
+  nikolai: 'https://i.pravatar.cc/150?img=60',
+  penny:   'https://i.pravatar.cc/150?img=9',
+  marco:   'https://i.pravatar.cc/150?img=52',
+  ivy:     'https://i.pravatar.cc/150?img=21',
+  thor:    'https://i.pravatar.cc/150?img=57',
+  mei:     'https://i.pravatar.cc/150?img=26',
+  boris:   'https://i.pravatar.cc/150?img=61',
+  luna:    'https://i.pravatar.cc/150?img=20',
+  dante:   'https://i.pravatar.cc/150?img=69'
+};
+
+// RULE: Each neighbor gives EITHER 1 daily reward OR 1 permanent boost — never both.
+// "give" field: 'reward' or 'boost'
+const neighbors = [
+  // ── Row 1: Unlocked ──
+  { id:'marta', name:'Marta', fullName:'Marta the Baker', rarity:'common', unlocked:true, rewardReady:true, give:'reward',
+    reward:{type:'gold',label:'🪙 10 gold',badge:'gold',badgeIcon:'🪙',cls:'gold-text'},
+    quote:'"The secret ingredient is always love... and butter."',
+    boost:null, unlock:null },
+  { id:'felix', name:'Felix', fullName:'Felix the Handyman', rarity:'common', unlocked:true, rewardReady:true, give:'reward',
+    reward:{type:'energy',label:'⚡ 8 energy',badge:'energy',badgeIcon:'⚡',cls:'energy-text'},
+    quote:'"If it ain\'t broke, I\'ll find something that is."',
+    boost:null, unlock:null },
+  { id:'otto', name:'Prof. Otto', fullName:'Professor Otto', rarity:'rare', unlocked:true, rewardReady:false, give:'boost',
+    reward:null,
+    quote:'"Science is just organized curiosity!"',
+    boost:{label:'⚡ Max Energy',value:'+4'}, unlock:null },
+  { id:'rosa', name:'Rosa', fullName:'Rosa the Gardener', rarity:'rare', unlocked:true, rewardReady:false, give:'boost',
+    reward:null,
+    quote:'"Every garden begins with a single seed."',
+    boost:{label:'🔄 Recharge Discount',value:'-5%'}, unlock:null },
+
+  // ── Row 2: Locked F2P ──
+  { id:'elise', name:'???', fullName:'Grandma Elise', rarity:'epic', unlocked:false, progress:73, give:'boost',
+    reward:null,
+    quote:'"I\'ve been decorating homes since before you were born, dear."',
+    boost:{label:'⚡ Max Energy',value:'+6'},
+    unlock:{conditions:[{label:'Complete 15 rooms',c:11,t:15},{label:'Reach Level 25',c:18,t:25}]} },
+  { id:'rex', name:'???', fullName:'Captain Rex', rarity:'epic', unlocked:false, give:'reward',
+    reward:{type:'gold',label:'🪙 25 gold'},
+    quote:'"A captain always goes down with his ship... unless there\'s merge chains."',
+    boost:null,
+    unlock:{conditions:[{label:'Spend 100K coins',c:42000,t:100000},{label:'Complete 200 orders',c:87,t:200}]} },
+  { id:'penny', name:'Penny', fullName:'Penny the Postwoman', rarity:'common', unlocked:false, progress:45, give:'reward',
+    reward:{type:'energy',label:'⚡ 12 energy'},
+    quote:'"Rain, snow, or merge fever — the mail always gets through."',
+    boost:null, dailyTask:{label:'Complete 10 orders',icon:'📋'},
+    unlock:{conditions:[{label:'Complete 100 orders',c:45,t:100}]} },
+  { id:'marco', name:'Marco', fullName:'Marco the Carpenter', rarity:'rare', unlocked:false, give:'boost',
+    reward:null,
+    quote:'"Measure twice, merge once."',
+    boost:{label:'📦 Recharge Amount',value:'+1'},
+    unlock:{conditions:[{label:'Merge 1000 items',c:340,t:1000}]} },
+
+  // ── Row 3: Seasonal ──
+  { id:'sparky', name:'???', fullName:'Sparky', rarity:'common', unlocked:false, seasonal:'🎆', returns:'Jul 2026', give:'reward',
+    reward:{type:'energy',label:'⚡ 12 energy'}, boost:null, unlock:null },
+  { id:'holly', name:'???', fullName:'Holly', rarity:'common', unlocked:false, seasonal:'🎄', returns:'Dec 2026', give:'boost',
+    reward:null, boost:{label:'🫧 Bubble Discount',value:'-10%'}, unlock:null },
+  { id:'cupid', name:'Cupid', fullName:'Cupid', rarity:'rare', unlocked:false, isIAP:true, iapPrice:'$4.99', iapTimer:'2d 14h', give:'boost',
+    reward:null,
+    quote:'"Love is in the air... and so are merge chains!"',
+    boost:{label:'🔄 Recharge Discount',value:'-5%'},
+    iapBundle:[{label:'⚡ 100 Energy'},{label:'🪙 250 Gold'}] },
+  { id:'jack', name:'???', fullName:'Jack O\'Lantern', rarity:'rare', unlocked:false, seasonal:'🎃', returns:'Oct 2026', give:'reward',
+    reward:{type:'gold',label:'🪙 15 gold'}, boost:null, unlock:null },
+
+  // ── Row 4: Mix (new) ──
+  { id:'aurora', name:'???', fullName:'Aurora', rarity:'epic', unlocked:false, seasonal:'🌸', returns:'Apr 2027', give:'boost',
+    reward:null, boost:{label:'⏱️ Regen Rate',value:'+10%'}, unlock:null },
+  { id:'nikolai', name:'???', fullName:'Nikolai', rarity:'epic', unlocked:false, seasonal:'❄️', returns:'Jan 2027', give:'reward',
+    reward:{type:'energy',label:'⚡ 20 energy'}, boost:null, unlock:null },
+  { id:'ivy', name:'Ivy', fullName:'Ivy the Florist', rarity:'rare', unlocked:false, give:'boost',
+    reward:null,
+    quote:'"Every petal has a purpose."',
+    boost:{label:'💎 Chest Discount',value:'-5%'},
+    unlock:{conditions:[{label:'Open 50 chests',c:18,t:50}]} },
+  { id:'thor', name:'???', fullName:'Thor the Blacksmith', rarity:'epic', unlocked:false, give:'boost',
+    reward:null,
+    quote:'"Forged in fire, merged in style."',
+    boost:{label:'⚡ Max Energy',value:'+4'},
+    unlock:{conditions:[{label:'Complete 20 rooms',c:8,t:20},{label:'Win Merge League 5x',c:1,t:5}]} },
+
+  // ── Row 5: Mix (new) ──
+  { id:'mei', name:'Mei', fullName:'Mei the Chef', rarity:'common', unlocked:false, give:'reward',
+    reward:{type:'gold',label:'🪙 10 gold'},
+    quote:'"Good food brings good neighbors."',
+    boost:null, dailyTask:{label:'Watch 5 ads',icon:'📺'},
+    unlock:{conditions:[{label:'Reach Level 10',c:8,t:10}]} },
+  { id:'boris', name:'Boris', fullName:'Boris the Fisherman', rarity:'rare', unlocked:false, give:'reward',
+    reward:{type:'energy',label:'⚡ 15 energy'},
+    quote:'"Patience is the best bait."',
+    boost:null, dailyTask:{label:'Merge 20 items',icon:'🔀'},
+    unlock:{conditions:[{label:'Win Merge Fever 3x',c:0,t:3}]} },
+  { id:'luna', name:'???', fullName:'Luna', rarity:'rare', unlocked:false, seasonal:'🌙', returns:'Sep 2026', give:'boost',
+    reward:null, boost:{label:'🔄 Recharge Discount',value:'-3%'}, unlock:null },
+  { id:'dante', name:'???', fullName:'Dante', rarity:'epic', unlocked:false, seasonal:'🔥', returns:'Mar 2027', give:'reward',
+    reward:{type:'gold',label:'🪙 30 gold'}, boost:null, unlock:null }
+];
+
+// Render grid
+function renderGrid() {
+  const grid = document.getElementById('neighbor-grid');
+  grid.innerHTML = neighbors.map(n => {
+    const isLocked = !n.unlocked;
+    const avatarCls = isLocked ? 'avatar locked' : 'avatar';
+    let badgeHtml = '';
+    if (n.unlocked && n.give==='reward' && n.rewardReady && n.reward?.badge) {
+      badgeHtml = `<div class="reward-badge ${n.reward.badge}">${n.reward.badgeIcon}</div>`;
+    }
+    if (isLocked && n.seasonal) {
+      badgeHtml = `<span class="seasonal-badge">${n.seasonal}</span>`;
+    }
+    if (isLocked && n.isIAP) {
+      badgeHtml = `<div class="iap-badge">!</div>`;
+    }
+
+    let statusHtml = '';
+    if (n.unlocked && n.give==='reward' && n.rewardReady) {
+      statusHtml = `<span class="reward-text ${n.reward.cls}">${n.reward.label}</span>`;
+    } else if (n.unlocked && n.give==='boost' && n.boost) {
+      statusHtml = `<span class="reward-text" style="color:#2e7d32;font-size:9px;">${n.boost.value} ${n.boost.label.split(' ').slice(1).join(' ')}</span>`;
+    } else if (isLocked && n.progress) {
+      statusHtml = `<div class="progress-bar"><div class="progress-fill ${n.rarity}" style="width:${n.progress}%"></div></div>`;
+    } else if (isLocked && n.isIAP) {
+      statusHtml = `<span class="countdown">${n.iapTimer} left</span>`;
+    } else if (isLocked && n.returns) {
+      statusHtml = `<span class="returns-text">${n.returns}</span>`;
+    } else if (isLocked) {
+      statusHtml = `<span class="reward-text">?</span>`;
+    }
+
+    // Show daily task icon if applicable
+    let taskHtml = '';
+    if (n.dailyTask && !isLocked) {
+      taskHtml = `<span class="reward-text" style="font-size:8px;color:#8d7a5a;">${n.dailyTask.icon} ${n.dailyTask.label}</span>`;
+    }
+
+    return `
+      <div class="neighbor-card ${n.rarity}" onclick="showDetail('${n.id}')">
+        <div class="card-header"><span class="neighbor-name${isLocked?' locked':''}">${n.name}</span></div>
+        <div class="card-body">
+          <div class="avatar-wrap">
+            <img class="${avatarCls}" src="${AVATARS[n.id]}" alt="${n.name}">
+            ${badgeHtml}
+          </div>
+          ${statusHtml}
+          ${taskHtml}
+          <span class="rarity-label ${n.rarity}">${n.rarity}</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+renderGrid();
+
+// Tab switching
+function switchMainTab(tab, el) {
+  document.querySelectorAll('.book-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('items-subtabs').style.display = tab==='items' ? 'flex' : 'none';
+  document.getElementById('boosts-bar').style.display = tab==='neighbours' ? 'block' : 'none';
+}
+
+function switchItemsTab(tab, el) {
+  document.querySelectorAll('.items-subtab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.items-tab-content').forEach(t => t.style.display='none');
+  document.getElementById('itemstab-'+tab).style.display='block';
+}
+
+// Detail card
+function showDetail(id) {
+  const n = neighbors.find(x=>x.id===id);
+  if (!n) return;
+  const ov = document.getElementById('detail-overlay');
+  const ct = document.getElementById('detail-content');
+  const rarityStars = n.rarity==='common'?'★':n.rarity==='rare'?'★★':'★★★';
+  const rarityName = n.rarity.charAt(0).toUpperCase()+n.rarity.slice(1);
+
+  let h = `<div class="detail-card-header">
+    <button class="detail-close" onclick="hideDetail(event)">&times;</button>
+    <img class="detail-avatar ${n.rarity}-border ${!n.unlocked?'locked-style':''}" src="${AVATARS[n.id]}" alt="${n.fullName}">
+    <div class="detail-name">${n.fullName}</div>
+    <div class="detail-rarity ${n.rarity}">${rarityStars} ${rarityName}${n.isIAP?' — Valentine\'s 2026':''}</div>
+    ${n.quote?`<div class="detail-quote">${n.quote}</div>`:''}
+  </div><div class="detail-card-body">`;
+
+  // What this neighbor gives (either reward OR boost)
+  if (n.give === 'reward' && n.reward) {
+    h += `<div class="detail-section"><div class="detail-section-title">Daily Reward${!n.unlocked?' (Locked)':''}</div>`;
+    h += `<div class="detail-row"><span class="detail-row-label">${n.reward.label}</span>`;
+    if (n.unlocked && n.rewardReady) h += `<button class="collect-btn">Collect</button>`;
+    else if (n.unlocked) h += `<span class="detail-row-value">Collected ✓</span>`;
+    else h += `<span class="detail-row-value">—</span>`;
+    h += `</div>`;
+    // Daily task requirement
+    if (n.dailyTask) {
+      h += `<div class="detail-row" style="border-top:1px dashed rgba(0,0,0,0.08);padding-top:6px;margin-top:4px;">`;
+      h += `<span class="detail-row-label">${n.dailyTask.icon} Requires</span>`;
+      h += `<span class="detail-row-value" style="font-size:11px;">${n.dailyTask.label}</span></div>`;
+    }
+    h += `</div>`;
+  } else if (n.give === 'boost' && n.boost) {
+    h += `<div class="detail-section"><div class="detail-section-title">Permanent Boost${!n.unlocked?' (Locked)':''}</div>`;
+    h += `<div class="detail-row"><span class="detail-row-label">${n.boost.label}</span>`;
+    h += n.unlocked ? `<span class="active-label">${n.boost.value} ACTIVE</span>` : `<span class="detail-row-value">${n.boost.value}</span>`;
+    h += `</div></div>`;
+  }
+
+  // Unlock
+  if (!n.unlocked && n.unlock) {
+    h += `<div class="detail-section"><div class="detail-section-title">How to Unlock</div>`;
+    let tp=0;
+    n.unlock.conditions.forEach(c => {
+      const p=Math.round(c.c/c.t*100); tp+=p;
+      h += `<div class="detail-row"><span class="detail-row-label">${c.label}</span><span style="color:#7b1fa2;font-weight:900;font-size:12px;">${c.c.toLocaleString()}/${c.t.toLocaleString()}</span></div>`;
+    });
+    const ap=Math.round(tp/n.unlock.conditions.length);
+    h += `<div class="detail-progress-bar"><div class="detail-progress-fill" style="width:${ap}%;background:linear-gradient(90deg,#ab47bc,#ce93d8)"></div></div>`;
+    h += `<div class="detail-progress-text">${ap}%</div></div>`;
+  }
+
+  // IAP
+  if (n.isIAP) {
+    h += `<div class="detail-section"><div class="detail-section-title">Limited Offer — ${n.iapTimer} left</div>`;
+    if (n.iapBundle) n.iapBundle.forEach(i => {
+      h += `<div class="detail-row"><span class="detail-row-label">${i.label}</span><span class="detail-row-value">Bonus</span></div>`;
+    });
+    h += `<button class="iap-button">${n.iapPrice} — Unlock ${n.fullName}</button>`;
+    h += `<div class="iap-subtext">Or earn free next year</div></div>`;
+  }
+
+  // Seasonal note
+  if (!n.unlocked && n.returns && !n.isIAP) {
+    h += `<div class="detail-section"><div class="detail-section-title">Seasonal Neighbor</div>`;
+    h += `<div style="text-align:center;font-size:12px;color:#6d5a3a;padding:8px 0;">Available during ${n.seasonal} event<br><strong>Returns ${n.returns}</strong></div></div>`;
+  }
+
+  h += `</div>`;
+  ct.innerHTML = h;
+  ov.classList.add('visible');
+}
+
+function hideDetail(e) {
+  if (e.target.classList.contains('detail-overlay') || e.target.classList.contains('detail-close'))
+    document.getElementById('detail-overlay').classList.remove('visible');
+}
+
+function claimAll() {
+  neighbors.forEach(n => { if (n.unlocked && n.rewardReady) n.rewardReady = false; });
+  renderGrid();
+  const btn = document.getElementById('claim-btn');
+  btn.classList.add('disabled'); btn.textContent = 'All Claimed';
+  const badge = document.querySelector('.nav-badge');
+  if (badge) badge.style.display = 'none';
+}
+</script>
+</body>
+</html>
