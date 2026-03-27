@@ -136,6 +136,9 @@
     width: 100%; background: linear-gradient(180deg, #1e88e5, #1565c0);
     padding: 3px 3px 2px; text-align: center; border-bottom: 1.5px solid rgba(0,0,0,0.15);
   }
+  .card-header.locked-header {
+    background: linear-gradient(180deg, #607d8b, #455a64);
+  }
   .neighbor-name { font-size: 9.5px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
   .neighbor-name.locked { color: #8899aa; font-style: italic; }
   .neighbor-name.active { color: #69f0ae; }
@@ -661,12 +664,12 @@ const neighbors = [
     boost:{label:'🔄 Recharge Discount',value:'-5%'}, unlock:null },
 
   // ── Row 2: Locked F2P ──
-  { id:'elise', name:'???', fullName:'Grandma Elise', rarity:'epic', unlocked:false, progress:73, give:'boost',
+  { id:'elise', name:'Elise', fullName:'Grandma Elise', rarity:'epic', unlocked:false, progress:73, give:'boost',
     reward:null,
     quote:'"I\'ve been decorating homes since before you were born, dear."',
     boost:{label:'⚡ Max Energy',value:'+6'},
     unlock:{conditions:[{label:'Complete 15 rooms',c:11,t:15}]} },
-  { id:'rex', name:'???', fullName:'Captain Rex', rarity:'epic', unlocked:false, give:'reward',
+  { id:'rex', name:'Rex', fullName:'Captain Rex', rarity:'epic', unlocked:false, give:'reward',
     reward:{type:'gold',label:'🪙 7 gold'},
     quote:'"A captain always goes down with his ship... unless there\'s merge chains."',
     boost:null,
@@ -683,29 +686,29 @@ const neighbors = [
     unlock:{conditions:[{label:'Merge 1000 items',c:340,t:1000}]} },
 
   // ── Row 3: Seasonal ──
-  { id:'sparky', name:'???', fullName:'Sparky', rarity:'common', unlocked:false, seasonal:'🎆', returns:'Jul 2026', give:'reward',
+  { id:'sparky', name:'Sparky', fullName:'Sparky', rarity:'common', unlocked:false, seasonal:'🎆', returns:'Jul 2026', give:'reward',
     reward:{type:'energy',label:'⚡ 3 energy'}, boost:null, unlock:null },
-  { id:'holly', name:'???', fullName:'Holly', rarity:'common', unlocked:false, seasonal:'🎄', returns:'Dec 2026', give:'boost',
+  { id:'holly', name:'Holly', fullName:'Holly', rarity:'common', unlocked:false, seasonal:'🎄', returns:'Dec 2026', give:'boost',
     reward:null, boost:{label:'🫧 Bubble Discount',value:'-10%'}, unlock:null },
   { id:'cupid', name:'Cupid', fullName:'Cupid', rarity:'rare', unlocked:false, isIAP:true, iapPrice:'$4.99', iapTimer:'2d 14h', give:'boost',
     reward:null,
     quote:'"Love is in the air... and so are merge chains!"',
     boost:{label:'🔄 Recharge Discount',value:'-5%'},
     iapBundle:[{label:'⚡ 100 Energy'},{label:'🪙 250 Gold'}] },
-  { id:'jack', name:'???', fullName:'Jack O\'Lantern', rarity:'rare', unlocked:false, seasonal:'🎃', returns:'Oct 2026', give:'reward',
+  { id:'jack', name:'Jack', fullName:'Jack O\'Lantern', rarity:'rare', unlocked:false, seasonal:'🎃', returns:'Oct 2026', give:'reward',
     reward:{type:'gold',label:'🪙 5 gold'}, boost:null, unlock:null },
 
   // ── Row 4: Mix (new) ──
-  { id:'aurora', name:'???', fullName:'Aurora', rarity:'epic', unlocked:false, seasonal:'🌸', returns:'Apr 2027', give:'boost',
+  { id:'aurora', name:'Aurora', fullName:'Aurora', rarity:'epic', unlocked:false, seasonal:'🌸', returns:'Apr 2027', give:'boost',
     reward:null, boost:{label:'⏱️ Regen Rate',value:'+10%'}, unlock:null },
-  { id:'nikolai', name:'???', fullName:'Nikolai', rarity:'epic', unlocked:false, seasonal:'❄️', returns:'Jan 2027', give:'reward',
+  { id:'nikolai', name:'Nikolai', fullName:'Nikolai', rarity:'epic', unlocked:false, seasonal:'❄️', returns:'Jan 2027', give:'reward',
     reward:{type:'energy',label:'⚡ 7 energy'}, boost:null, unlock:null },
   { id:'ivy', name:'Ivy', fullName:'Ivy the Florist', rarity:'rare', unlocked:false, give:'boost',
     reward:null,
     quote:'"Every petal has a purpose."',
     boost:{label:'💎 Chest Discount',value:'-5%'},
     unlock:{conditions:[{label:'Open 50 chests',c:18,t:50}]} },
-  { id:'thor', name:'???', fullName:'Thor the Blacksmith', rarity:'epic', unlocked:false, give:'boost',
+  { id:'thor', name:'Thor', fullName:'Thor the Blacksmith', rarity:'epic', unlocked:false, give:'boost',
     reward:null,
     quote:'"Forged in fire, merged in style."',
     boost:{label:'⚡ Max Energy',value:'+4'},
@@ -722,9 +725,9 @@ const neighbors = [
     quote:'"Patience is the best bait."',
     boost:null, dailyTask:{label:'Merge 20 items',icon:'🔀'},
     unlock:{conditions:[{label:'Win Merge Fever 3x',c:0,t:3}]} },
-  { id:'luna', name:'???', fullName:'Luna', rarity:'rare', unlocked:false, seasonal:'🌙', returns:'Sep 2026', give:'boost',
+  { id:'luna', name:'Luna', fullName:'Luna', rarity:'rare', unlocked:false, seasonal:'🌙', returns:'Sep 2026', give:'boost',
     reward:null, boost:{label:'🔄 Recharge Discount',value:'-3%'}, unlock:null },
-  { id:'dante', name:'???', fullName:'Dante', rarity:'epic', unlocked:false, seasonal:'🔥', returns:'Mar 2027', give:'reward',
+  { id:'dante', name:'Dante', fullName:'Dante', rarity:'epic', unlocked:false, seasonal:'🔥', returns:'Mar 2027', give:'reward',
     reward:{type:'gold',label:'🪙 7 gold'}, boost:null, unlock:null }
 ];
 
@@ -754,8 +757,6 @@ function renderGrid() {
       statusHtml = `<div class="progress-bar"><div class="progress-fill ${n.rarity}" style="width:${n.progress}%"></div></div>`;
     } else if (isLocked && n.isIAP) {
       statusHtml = `<span class="countdown">${n.iapTimer} left</span>`;
-    } else if (isLocked && n.returns) {
-      statusHtml = `<span class="returns-text">${n.returns}</span>`;
     } else if (isLocked) {
       statusHtml = `<span class="reward-text">?</span>`;
     }
@@ -770,7 +771,7 @@ function renderGrid() {
 
     return `
       <div class="neighbor-card ${n.rarity}" onclick="showDetail('${n.id}')">
-        <div class="card-header"><span class="neighbor-name ${nameCls}">${n.name}</span></div>
+        <div class="card-header${isLocked?' locked-header':''}"><span class="neighbor-name ${nameCls}">${n.name}</span></div>
         <div class="card-body">
           <div class="avatar-wrap">
             <img class="${avatarCls}" src="${AVATARS[n.id]}" alt="${n.name}">
