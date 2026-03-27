@@ -133,12 +133,11 @@
   .neighbor-card.epic { border: 2.5px solid #e6c02e; box-shadow: 0 0 10px rgba(230,192,46,0.12); }
 
   .card-header {
-    width: 100%; background: linear-gradient(180deg, #1e88e5, #1565c0);
-    padding: 3px 3px 2px; text-align: center; border-bottom: 1.5px solid rgba(0,0,0,0.15);
+    width: 100%; padding: 3px 3px 2px; text-align: center; border-bottom: 1.5px solid rgba(0,0,0,0.15);
   }
-  .card-header.locked-header {
-    background: linear-gradient(180deg, #607d8b, #455a64);
-  }
+  .card-header.rarity-common { background: linear-gradient(180deg, #66bb6a, #388e3c); }
+  .card-header.rarity-rare { background: linear-gradient(180deg, #42a5f5, #1565c0); }
+  .card-header.rarity-epic { background: linear-gradient(180deg, #ab47bc, #7b1fa2); }
   .neighbor-name { font-size: 9.5px; font-weight: 800; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
   .neighbor-name.locked { color: #8899aa; font-style: italic; }
   .neighbor-name.active { color: #69f0ae; }
@@ -147,6 +146,9 @@
   .card-body {
     width: 100%; background: linear-gradient(180deg, #f5e6c8, #e8d5b0);
     padding: 6px 4px 7px; display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1;
+  }
+  .card-body.locked-body {
+    background: linear-gradient(180deg, #b0b8c0, #9aa2aa);
   }
 
   /* ══ AVATAR ══ */
@@ -200,10 +202,47 @@
   .returns-text { font-size: 9px; font-weight: 700; color: #8d7a5a; font-style: italic; }
   .countdown { font-size: 9px; font-weight: 800; color: #e65100; }
 
+  /* ══ CLAIM ALL BAR ══ */
+  .claim-bar {
+    background: linear-gradient(180deg, #0d47a1, #0a3680);
+    padding: 8px 12px;
+    display: flex; justify-content: flex-end;
+    border-top: 2px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+  }
+  .claim-all-btn-big {
+    background: linear-gradient(180deg, #66bb6a, #2e7d32); color: #fff;
+    border: 2.5px solid #1b5e20; padding: 10px 28px; border-radius: 18px;
+    font-size: 14px; font-weight: 900; font-family: inherit; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3); transition: all 0.15s;
+    letter-spacing: 0.5px;
+  }
+  .claim-all-btn-big:hover { transform: scale(1.05); }
+  .claim-all-btn-big.disabled { background: linear-gradient(180deg, #78909c, #546e7a); border-color: #37474f; box-shadow: none; cursor: default; }
+
+  /* ══ ACTIVE EVENT CARD ══ */
+  .neighbor-card.active-event {
+    border: 2.5px solid #ffd700 !important;
+    box-shadow: 0 0 14px rgba(255,215,0,0.3), 0 0 28px rgba(255,215,0,0.1) !important;
+    animation: goldGlow 2s ease-in-out infinite;
+  }
+  @keyframes goldGlow {
+    0%,100% { box-shadow: 0 0 14px rgba(255,215,0,0.3), 0 0 28px rgba(255,215,0,0.1); }
+    50% { box-shadow: 0 0 20px rgba(255,215,0,0.5), 0 0 36px rgba(255,215,0,0.2); }
+  }
+  .card-header.rarity-event {
+    background: linear-gradient(180deg, #ffd54f, #f9a825);
+  }
+  .card-header.rarity-event .neighbor-name { color: #5d4037; text-shadow: none; }
+  .event-tag {
+    font-size: 8px; font-weight: 900; color: #fff; background: linear-gradient(135deg, #ffd700, #ff8f00);
+    padding: 2px 6px; border-radius: 4px; text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+  }
+
   /* ══ BOOSTS BAR ══ */
   .boosts-bar {
-    background: linear-gradient(180deg, #0d47a1, #0a3680);
-    border-top: 2px solid rgba(255,255,255,0.08);
+    background: linear-gradient(180deg, #0a3680, #082a60);
     padding: 7px 10px 5px; flex-shrink: 0;
   }
   .boosts-title { font-size: 8px; font-weight: 800; color: #64b5f6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
@@ -480,9 +519,8 @@
       <div class="section-header">
         <div style="display:flex;align-items:center;">
           <span class="section-title">My Neighbourhood</span>
-          <span class="unlock-count">4 / 20</span>
+          <span class="unlock-count">4 / 21</span>
         </div>
-        <button class="claim-all-btn" id="claim-btn" onclick="claimAll()">Claim All</button>
       </div>
 
       <div class="neighbor-grid" id="neighbor-grid">
@@ -590,6 +628,11 @@
 
   </div>
 
+  <!-- Claim All Bar (only visible on neighbours tab) -->
+  <div class="claim-bar" id="claim-bar">
+    <button class="claim-all-btn-big" id="claim-btn" onclick="claimAll()">Claim All</button>
+  </div>
+
   <!-- Boosts Bar (only visible on neighbours tab) -->
   <div class="boosts-bar" id="boosts-bar">
     <div class="boosts-title">Active Boosts</div>
@@ -639,12 +682,21 @@ const AVATARS = {
   mei:     'https://i.pravatar.cc/150?img=26',
   boris:   'https://i.pravatar.cc/150?img=61',
   luna:    'https://i.pravatar.cc/150?img=20',
-  dante:   'https://i.pravatar.cc/150?img=69'
+  dante:   'https://i.pravatar.cc/150?img=69',
+  flora:   'https://i.pravatar.cc/150?img=29'
 };
 
 // RULE: Each neighbor gives EITHER 1 daily reward OR 1 permanent boost — never both.
 // "give" field: 'reward' or 'boost'
 const neighbors = [
+  // ── ACTIVE EVENT — gold highlight, winnable right now ──
+  { id:'flora', name:'Flora', fullName:'Flora the Spring Queen', rarity:'epic', unlocked:false, give:'boost',
+    reward:null,
+    quote:'"Spring blooms for those who tend the garden."',
+    boost:{label:'⏱️ Regen Rate',value:'+8%'},
+    activeEvent:true, eventName:'Spring Festival', eventTask:'Complete all Spring Festival tasks',
+    unlock:{conditions:[{label:'Complete all Spring Festival tasks',c:3,t:8}]} },
+
   // ── Row 1: Unlocked ──
   { id:'marta', name:'Marta', fullName:'Marta the Baker', rarity:'common', unlocked:true, rewardReady:true, give:'reward',
     reward:{type:'gold',label:'🪙 3 gold',badge:'gold',badgeIcon:'🪙',cls:'gold-text'},
@@ -686,23 +738,28 @@ const neighbors = [
     unlock:{conditions:[{label:'Merge 1000 items',c:340,t:1000}]} },
 
   // ── Row 3: Seasonal ──
-  { id:'sparky', name:'Sparky', fullName:'Sparky', rarity:'common', unlocked:false, seasonal:'🎆', returns:'Jul 2026', give:'reward',
-    reward:{type:'energy',label:'⚡ 3 energy'}, boost:null, unlock:null },
-  { id:'holly', name:'Holly', fullName:'Holly', rarity:'common', unlocked:false, seasonal:'🎄', returns:'Dec 2026', give:'boost',
-    reward:null, boost:{label:'🫧 Bubble Discount',value:'-10%'}, unlock:null },
+  { id:'sparky', name:'Sparky', fullName:'Sparky', rarity:'common', unlocked:false, seasonal:'🎆', give:'reward',
+    reward:{type:'energy',label:'⚡ 3 energy'}, boost:null, eventName:'Independence Day', eventTask:'Win Independence Day event',
+    unlock:{conditions:[{label:'Win Independence Day event',c:0,t:1}]} },
+  { id:'holly', name:'Holly', fullName:'Holly', rarity:'common', unlocked:false, seasonal:'🎄', give:'boost',
+    reward:null, boost:{label:'🫧 Bubble Discount',value:'-10%'}, eventName:'Christmas', eventTask:'Complete all Christmas tasks',
+    unlock:{conditions:[{label:'Complete all Christmas tasks',c:0,t:1}]} },
   { id:'cupid', name:'Cupid', fullName:'Cupid', rarity:'rare', unlocked:false, isIAP:true, iapPrice:'$4.99', iapTimer:'2d 14h', give:'boost',
     reward:null,
     quote:'"Love is in the air... and so are merge chains!"',
-    boost:{label:'🔄 Recharge Discount',value:'-5%'},
+    boost:{label:'🔄 Recharge Discount',value:'-5%'}, eventName:'Valentine\'s Day', eventTask:'Win Valentine\'s Day event',
     iapBundle:[{label:'⚡ 100 Energy'},{label:'🪙 250 Gold'}] },
-  { id:'jack', name:'Jack', fullName:'Jack O\'Lantern', rarity:'rare', unlocked:false, seasonal:'🎃', returns:'Oct 2026', give:'reward',
-    reward:{type:'gold',label:'🪙 5 gold'}, boost:null, unlock:null },
+  { id:'jack', name:'Jack', fullName:'Jack O\'Lantern', rarity:'rare', unlocked:false, seasonal:'🎃', give:'reward',
+    reward:{type:'gold',label:'🪙 5 gold'}, boost:null, eventName:'Halloween', eventTask:'Complete all Halloween tasks',
+    unlock:{conditions:[{label:'Complete all Halloween tasks',c:0,t:1}]} },
 
   // ── Row 4: Mix (new) ──
-  { id:'aurora', name:'Aurora', fullName:'Aurora', rarity:'epic', unlocked:false, seasonal:'🌸', returns:'Apr 2027', give:'boost',
-    reward:null, boost:{label:'⏱️ Regen Rate',value:'+10%'}, unlock:null },
-  { id:'nikolai', name:'Nikolai', fullName:'Nikolai', rarity:'epic', unlocked:false, seasonal:'❄️', returns:'Jan 2027', give:'reward',
-    reward:{type:'energy',label:'⚡ 7 energy'}, boost:null, unlock:null },
+  { id:'aurora', name:'Aurora', fullName:'Aurora', rarity:'epic', unlocked:false, seasonal:'🌸', give:'boost',
+    reward:null, boost:{label:'⏱️ Regen Rate',value:'+10%'}, eventName:'Spring Festival', eventTask:'Complete all Spring Festival tasks',
+    unlock:{conditions:[{label:'Complete all Spring Festival tasks',c:0,t:1}]} },
+  { id:'nikolai', name:'Nikolai', fullName:'Nikolai', rarity:'epic', unlocked:false, seasonal:'❄️', give:'reward',
+    reward:{type:'energy',label:'⚡ 7 energy'}, eventName:'Winter Holiday', eventTask:'Win Winter Holiday event',
+    unlock:{conditions:[{label:'Win Winter Holiday event',c:0,t:1}]} },
   { id:'ivy', name:'Ivy', fullName:'Ivy the Florist', rarity:'rare', unlocked:false, give:'boost',
     reward:null,
     quote:'"Every petal has a purpose."',
@@ -725,10 +782,12 @@ const neighbors = [
     quote:'"Patience is the best bait."',
     boost:null, dailyTask:{label:'Merge 20 items',icon:'🔀'},
     unlock:{conditions:[{label:'Win Merge Fever 3x',c:0,t:3}]} },
-  { id:'luna', name:'Luna', fullName:'Luna', rarity:'rare', unlocked:false, seasonal:'🌙', returns:'Sep 2026', give:'boost',
-    reward:null, boost:{label:'🔄 Recharge Discount',value:'-3%'}, unlock:null },
-  { id:'dante', name:'Dante', fullName:'Dante', rarity:'epic', unlocked:false, seasonal:'🔥', returns:'Mar 2027', give:'reward',
-    reward:{type:'gold',label:'🪙 7 gold'}, boost:null, unlock:null }
+  { id:'luna', name:'Luna', fullName:'Luna', rarity:'rare', unlocked:false, seasonal:'🌙', give:'boost',
+    reward:null, boost:{label:'🔄 Recharge Discount',value:'-3%'}, eventName:'Harvest Moon', eventTask:'Complete all Harvest Moon tasks',
+    unlock:{conditions:[{label:'Complete all Harvest Moon tasks',c:0,t:1}]} },
+  { id:'dante', name:'Dante', fullName:'Dante', rarity:'epic', unlocked:false, seasonal:'🔥', give:'reward',
+    reward:{type:'gold',label:'🪙 7 gold'}, eventName:'Fire Festival', eventTask:'Win Fire Festival event',
+    unlock:{conditions:[{label:'Win Fire Festival event',c:0,t:1}]} }
 ];
 
 // Render grid
@@ -768,18 +827,30 @@ function renderGrid() {
     }
 
     const nameCls = isLocked ? 'locked' : (n.dailyTask ? 'has-task' : 'active');
+    const cardExtra = n.activeEvent ? ' active-event' : '';
+    const headerCls = n.activeEvent ? 'rarity-event' : `rarity-${n.rarity}`;
+    const bodyCls = isLocked ? ' locked-body' : '';
+
+    // Event tag for event-linked neighbors
+    let eventHtml = '';
+    if (n.eventName && isLocked && !n.isIAP) {
+      eventHtml = `<span class="event-tag">${n.eventName}</span>`;
+    }
+    if (n.activeEvent) {
+      eventHtml = `<span class="event-tag">WIN NOW</span>`;
+    }
 
     return `
-      <div class="neighbor-card ${n.rarity}" onclick="showDetail('${n.id}')">
-        <div class="card-header${isLocked?' locked-header':''}"><span class="neighbor-name ${nameCls}">${n.name}</span></div>
-        <div class="card-body">
+      <div class="neighbor-card ${n.rarity}${cardExtra}" onclick="showDetail('${n.id}')">
+        <div class="card-header ${headerCls}"><span class="neighbor-name ${nameCls}">${n.name}</span></div>
+        <div class="card-body${bodyCls}">
           <div class="avatar-wrap">
             <img class="${avatarCls}" src="${AVATARS[n.id]}" alt="${n.name}">
             ${badgeHtml}
           </div>
           ${statusHtml}
           ${taskHtml}
-          <span class="rarity-label ${n.rarity}">${n.rarity}</span>
+          ${eventHtml}
         </div>
       </div>`;
   }).join('');
@@ -794,6 +865,7 @@ function switchMainTab(tab, el) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
   document.getElementById('items-subtabs').style.display = tab==='items' ? 'flex' : 'none';
+  document.getElementById('claim-bar').style.display = tab==='neighbours' ? 'flex' : 'none';
   document.getElementById('boosts-bar').style.display = tab==='neighbours' ? 'block' : 'none';
 }
 
